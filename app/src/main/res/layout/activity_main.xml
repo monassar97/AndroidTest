@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="305dp">
+
+        <Button
+            android:id="@+id/offers"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="العروض" />
+
+        <Button
+            android:id="@+id/FAQ"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="حقائق" />
+
+        <Button
+            android:id="@+id/Location"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="العنوان" />
+
+        <Button
+            android:id="@+id/RegisterUser"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="مستخدم جديد" />
+
+        <Button
+            android:id="@+id/OpenAccount"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="حساب جديد" />
+
+        <Button
+            android:id="@+id/Tools"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="الأدوات" />
+
+        <Button
+            android:id="@+id/ContactUs"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="تواصل معنا" />
+
+        <Button
+            android:id="@+id/language"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="اللغه" />
+
+        <Button
+            android:id="@+id/Country"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="المنطقه" />
+
+        <Button
+            android:id="@+id/Products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="المنتجات" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
