@@ -2,6 +2,7 @@ package com.zak.testapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import android.os.Bundle;
 
 public class NoDisplayActivity extends AppCompatActivity {

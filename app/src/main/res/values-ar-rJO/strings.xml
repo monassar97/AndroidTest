@@ -1,16 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Test</string>
-
-    <string name="offers">offers</string>
-    <string name="contactUs">contact us</string>
-    <string name="country">country</string>
-    <string name="faq">FAQ</string>
-    <string name="language">language</string>
-    <string name="location">location</string>
-    <string name="openAccount">open account</string>
-    <string name="products">products</string>
-    <string name="registerUser">register new user</string>
-    <string name="tools">tools</string>
+    <string name="offers">عروض</string>
+    <string name="contactUs">اتصل بنا</string>
+    <string name="country">الدوله</string>
+    <string name="faq">الاسئله الشائعه</string>
+    <string name="language">اللغه</string>
+    <string name="location">المواقع</string>
+    <string name="openAccount">فتح حساب جديد</string>
+    <string name="products">المنتجات</string>
+    <string name="registerUser">اشتراك جديد</string>
+    <string name="tools">ادوات</string>
 
     <string name="permission_required">Please grant the permission to use the microphone</string>
     <string name="start_service">START SERVICE</string>

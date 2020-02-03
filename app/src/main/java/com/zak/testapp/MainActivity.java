@@ -3,57 +3,90 @@ package com.zak.testapp;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.provider.SyncStateContract;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import com.afollestad.materialdialogs.MaterialDialog.Builder;
+
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener , RecognitionListener {
+import static com.zak.testapp.Constants.activity;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button contactUsButton, countryButton, faqButton, languageButton, locationButton, offersButton, openAccountButton, productsButton, registerUserButton, toolsButton;
     Handler handler;
-    private SpeechRecognizer mSpeechRecognizer;
-    private Intent mSpeechRecognizerIntent;
+    //private SpeechRecognizer mSpeechRecognizer;
+    //private Intent mSpeechRecognizerIntent;
+static  String language="en";
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String lang = preferences.getString("lang", "en");
+        language = lang;
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+        //    handler = new Handler();
+        // final int delay = 10000; //milliseconds
+
+     //   speak();
+       /* handler.postDelayed(new Runnable() {
+            public void run() {
+                speak();
+                handler.postDelayed(this, delay);
+            }
+        }, delay);*/
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        activity = this;
+        //enableAutoStart();
 
-
-
+        if (!checkServiceRunning()) {
+            startService(new Intent(MainActivity.this, MyService.class));
+        }else{
+            setLocale(language);
+        }
         setXmlReference();
         setListener();
-        handler = new Handler();
-        final int delay = 10000; //milliseconds
 
-        speak();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                speak();
-                handler.postDelayed(this, delay);
-            }
-        }, delay);
 
     }
 
     private void speak() {
-/*        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ar");
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language);
 
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi Speak Something");*/
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi Speak Something");
 
 
 
-        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+       /* mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -61,26 +94,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 this.getPackageName());
 
         mSpeechRecognizer.setRecognitionListener(this);
-
-      /*  try {
+*/
+        try {
             startActivityForResult(intent, 1000);
         } catch (Exception e) {
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
-        }*/
-
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case 1000:
                 if (resultCode == RESULT_OK && null != data) {
 
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     Toast.makeText(this, "Test " + result.get(0), Toast.LENGTH_LONG).show();
-                    if (result.get(0).contains("تواصل معنا")) {
+                    if (result.get(0).contains("اتصل بنا") || result.get(0).contains("contact us")) {
                         handler.removeCallbacksAndMessages(null);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ContactUsActivity.class);
@@ -89,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("المنطقه")) {
+                    if (result.get(0).contains("الدوله") || result.get(0).contains("country")) {
                         Toast.makeText(this, result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, CountryActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
@@ -97,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("حقائق")) {
+                    if (result.get(0).contains("الاسئله الشائعه") || result.get(0).contains("frequently asked questions")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, FaqActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
@@ -105,15 +136,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("اللغه")) {
+                    if (result.get(0).contains("اللغه") || result.get(0).contains("language")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LanguageActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
-                        startActivity(intentContactUs);
+                        String message = result.get(0).toLowerCase();
+                        intentContactUs.putExtra("message", message);
+                        if (message.contains("arabic")) {
+                           // language = "ar";
+                          //  setLocale("ar");
+                        } else if (message.contains("انجليزيه")) {
+                            //language = "en";
+                          //  setLocale("en");
+
+                        }
+                        //  startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("العنوان")) {
+                    if (result.get(0).contains("المواقع") || result.get(0).contains("location")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LocationActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
@@ -121,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("العروض")) {
+                    if (result.get(0).contains("عروض") || result.get(0).contains("offers")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, OffersActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
@@ -129,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("افتح حساب جديد")) {
+                    if (result.get(0).contains("فتح حساب جديد") || result.get(0).contains("open new account")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, OpenAccountActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
@@ -137,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("المنتجات")) {
+                    if (result.get(0).contains("المنتجات") || result.get(0).contains("products")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ProductsActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
@@ -145,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("مستخدم جديد")) {
+                    if (result.get(0).contains("اشتراك جديد") || result.get(0).contains("register new user")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, RegisterUserActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
@@ -153,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("الادوات")) {
+                    if (result.get(0).contains("ادوات") || result.get(0).contains("tools")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ToolsActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
@@ -164,12 +203,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 } else {
-                    handler.postDelayed(new Runnable() {
+                 /*   handler.postDelayed(new Runnable() {
                         public void run() {
                             speak();
                             handler.postDelayed(this, 10000);
                         }
-                    }, 10000);
+                    }, 10000);*/
                 }
         }
     }
@@ -203,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-,
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -282,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
+    /*@Override
     public void onReadyForSpeech(Bundle bundle) {
         Toast.makeText(getApplicationContext(),"1",Toast.LENGTH_LONG).show();;
     }
@@ -333,5 +372,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onEvent(int i, Bundle bundle) {
         Toast.makeText(getApplicationContext(),"9",Toast.LENGTH_LONG).show();;
 
+    }*/
+
+    public void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        Intent refresh = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(refresh);
+    }
+
+    private void enableAutoStart() {
+        for (Intent intent : Constants.AUTO_START_INTENTS) {
+            if (getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                new Builder(this).title("Enable Auto Start")
+                        .content("permission")
+                        .positiveText("allow")
+                        .onPositive((dialog, which) -> {
+                            try {
+                                for (Intent intent1 : Constants.AUTO_START_INTENTS)
+                                    if (getPackageManager().resolveActivity(intent1, PackageManager.MATCH_DEFAULT_ONLY)
+                                            != null) {
+                                        startActivity(intent1);
+                                        break;
+                                    }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        })
+                        .show();
+                break;
+            }
+        }
+    }
+
+
+    public boolean checkServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        if (manager != null) {
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(
+                    Integer.MAX_VALUE)) {
+                if (getString(R.string.my_service_name).equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

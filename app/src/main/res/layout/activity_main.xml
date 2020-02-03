@@ -17,61 +17,61 @@
             android:id="@+id/offers"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="العروض" />
+            android:text="@string/offers" />
 
         <Button
             android:id="@+id/FAQ"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="حقائق" />
+            android:text="@string/faq" />
 
         <Button
             android:id="@+id/Location"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="العنوان" />
+            android:text="@string/country" />
 
         <Button
             android:id="@+id/RegisterUser"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="مستخدم جديد" />
+            android:text="@string/registerUser" />
 
         <Button
             android:id="@+id/OpenAccount"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="حساب جديد" />
+            android:text="@string/openAccount" />
 
         <Button
             android:id="@+id/Tools"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="الأدوات" />
+            android:text="@string/tools" />
 
         <Button
             android:id="@+id/ContactUs"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="تواصل معنا" />
+            android:text="@string/contactUs" />
 
         <Button
             android:id="@+id/language"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="اللغه" />
+            android:text="@string/language" />
 
         <Button
             android:id="@+id/Country"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="المنطقه" />
+            android:text="@string/location" />
 
         <Button
             android:id="@+id/Products"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="المنتجات" />
+            android:text="@string/products" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

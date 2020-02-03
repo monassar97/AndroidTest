@@ -10,5 +10,6 @@ public class ContactUsActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_us_layout);
+
     }
 }
