@@ -29,7 +29,7 @@ import java.util.Locale;
 import static com.zak.testapp.Constants.activity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button contactUsButton, countryButton, faqButton, languageButton, locationButton, offersButton, openAccountButton, productsButton, registerUserButton, toolsButton;
+    Button contactUsButton, countryButton, faqButton, languageButton, locationButton, offersButton, openAccountButton, productsButton, registerUserButton, toolsButton,voiceButton;
     Handler handler;
     //private SpeechRecognizer mSpeechRecognizer;
     //private Intent mSpeechRecognizerIntent;
@@ -67,11 +67,11 @@ static  String language="ar";
         activity = this;
         //enableAutoStart();
 
-        if (!checkServiceRunning()) {
+      /*  if (!checkServiceRunning()) {
             startService(new Intent(MainActivity.this, MyService.class));
         }else{
             setLocale(language);
-        }
+        }*/
         setXmlReference();
         setListener();
 
@@ -226,11 +226,13 @@ static  String language="ar";
         productsButton = findViewById(R.id.Products);
         registerUserButton = findViewById(R.id.RegisterUser);
         toolsButton = findViewById(R.id.Tools);
+        voiceButton=findViewById(R.id.voice_button);
 
     }
 
     private void setListener() {
         contactUsButton.setOnClickListener(this);
+        voiceButton.setOnClickListener(this);
         countryButton.setOnClickListener(this);
         faqButton.setOnClickListener(this);
         languageButton.setOnClickListener(this);
@@ -248,6 +250,13 @@ static  String language="ar";
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.voice_button:
+                if (!checkServiceRunning()) {
+                    startService(new Intent(MainActivity.this, MyService.class));
+                }else{
+                    setLocale(language);
+                }
+                break;
             case R.id.ContactUs:
                 Intent intentContactUs = new Intent(this, ContactUsActivity.class);
                 //EditText editText = (EditText) findViewById(R.id.editText);
