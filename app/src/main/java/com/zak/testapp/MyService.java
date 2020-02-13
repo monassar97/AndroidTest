@@ -50,7 +50,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
             e.printStackTrace();
         }
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        language = preferences.getString("lang", "en");
+        language = preferences.getString("lang", "ar");
 
         Speech.init(this);
         Locale locale = new Locale(language);
@@ -111,126 +111,173 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
         if (!TextUtils.isEmpty(result)) {
             {
 
-
                 //  ArrayList<String> result = result.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 Toast.makeText(this, "Test " + result, Toast.LENGTH_LONG).show();
-                if (result.contains("اتصل بنا") || result.contains("contact us")) {
+                if (result.contains("اتصل بنا") || result.toLowerCase().contains("contact us")) {
                     // handler.removeCallbacksAndMessages(null);
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, ContactUsActivity.class);
+                    /*Intent intentContactUs = new Intent(this, ContactUsActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.ContactUsActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
-                if (result.contains("الدوله") || result.contains("country")) {
+                if (result.contains("الدوله") || result.toLowerCase().contains("country")) {
                     Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, CountryActivity.class);
+                   /* Intent intentContactUs = new Intent(this, CountryActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.CountryActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
-                if (result.contains("الاسئله الشائعه") || result.contains("frequently asked questions")) {
+                if (result.contains("الاسئله الشائعه") || result.toLowerCase().contains("frequently asked questions")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, FaqActivity.class);
+                    /*Intent intentContactUs = new Intent(this, FaqActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.FaqActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
-    /*    if (result.contains("اللغه") || result.contains("language")) {
-          Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-          Intent intentContactUs = new Intent(this, LanguageActivity.class);
-          //EditText editText = (EditText) findViewById(R.id.editText);
-          String message = result.toLowerCase();
-          intentContactUs.putExtra("message", message);
-          if (message.contains("arabic")) {
+                if (result.contains("اللغه") || result.contains("language")) {
+                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
+                    /*Intent intentContactUs = new Intent(this, FaqActivity.class);
+                    //EditText editText = (EditText) findViewById(R.id.editText);
+                    //String message = editText.getText().toString();
+                    //intent.putExtra("message", message);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.LanguageActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
+                  /*  Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
+                    Intent intentContactUs = new Intent(this, LanguageActivity.class);
+                    //EditText editText = (EditText) findViewById(R.id.editText);
+                    String message = result.toLowerCase();
+                    intentContactUs.putExtra("message", message);*/
+          /*if (message.contains("arabic")) {
             language = "ar";
             setLocale("ar");
           } else if (message.contains("انجليزيه")) {
             language = "en";
             setLocale("en");
 
-          }
-          //  startActivity(intentContactUs);
-        }*/
+          }*/
+                    //startActivity(intentContactUs);
+                }
 
-                if (result.contains("اللغه") || result.contains("language")) {
+               /* if (result.contains("اللغه") || result.toLowerCase().contains("language")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
                     Intent intentContactUs = new Intent(this, LanguageActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
-                    String message = result.toLowerCase();
+                    String message = result;
                     intentContactUs.putExtra("message", message);
-                    if (message.contains("arabic")) {
-
-
+                    if (message.toLowerCase().contains("arabic")) {
                         language = "ar";
                         setLocale("ar");
                         Locale locale = new Locale(language);
                         Speech.getInstance().setLocale(locale);
-                    } else if (message.contains("انجليزيه")) {
+                    }
+
+                    if (message.contains("انجليزيه")) {
                         language = "en";
                         setLocale("en");
                         Locale locale = new Locale(language);
                         Speech.getInstance().setLocale(locale);
 
                     }
-                    //  startActivity(intentContactUs);
-                } else if (result.toLowerCase().contains("apple") || result.toLowerCase().contains("apple") || result.toLowerCase().contains("apple")) {
+                      startActivity(intentContactUs);
+                }*/
+
+                /*if (result.toLowerCase().contains("apple") || result.toLowerCase().contains("apple") || result.toLowerCase().contains("apple")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.MainActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
-                }
-                if (result.contains("المواقع") || result.contains("location")) {
+                }*/
+                if (result.contains("مواقع") || result.toLowerCase().contains("location")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, LocationActivity.class);
+                    /*Intent intentContactUs = new Intent(this, LocationActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.LocationActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
-                if (result.contains("عروض") || result.contains("offers")) {
+                if (result.contains("عروض") || result.toLowerCase().contains("offers")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, OffersActivity.class);
+                    /*Intent intentContactUs = new Intent(this, OffersActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.OffersActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
-                if (result.contains("فتح حساب جديد") || result.contains("open new account")) {
+                if (result.contains("حساب جديد") || result.toLowerCase().contains("open new account")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, OpenAccountActivity.class);
+                    /*Intent intentContactUs = new Intent(this, OpenAccountActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.OpenAccountActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
-                if (result.contains("المنتجات") || result.contains("products")) {
+                if (result.contains("منتجات") || result.toLowerCase().contains("products")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, ProductsActivity.class);
+                    /*Intent intentContactUs = new Intent(this, ProductsActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.ProductsActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
-                if (result.contains("اشتراك جديد") || result.contains("register new user")) {
+                if (result.contains("اشتراك جديد") || result.toLowerCase().contains("register new user")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, RegisterUserActivity.class);
+                    /*Intent intentContactUs = new Intent(this, RegisterUserActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.RegisterUserActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
-                if (result.contains("ادوات") || result.contains("tools")) {
+                if (result.contains("ادوات") || result.toLowerCase().contains("tools")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, ToolsActivity.class);
+                    /*Intent intentContactUs = new Intent(this, ToolsActivity.class);
                     //EditText editText = (EditText) findViewById(R.id.editText);
                     //String message = editText.getText().toString();
                     //intent.putExtra("message", message);
-                    startActivity(intentContactUs);
+                    startActivity(intentContactUs);*/
+                    Intent i = new Intent();
+                    i.setClassName("com.zak.testapp", "com.zak.testapp.ToolsActivity");
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getBaseContext().startActivity(i);
                 }
 
 

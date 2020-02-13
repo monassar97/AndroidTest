@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/shabab"
+
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -16,61 +18,91 @@
         <Button
             android:id="@+id/offers"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/offers" />
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:text="@string/offers"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/FAQ"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/faq" />
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:text="@string/faq"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/Location"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/country" />
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:text="@string/country"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/RegisterUser"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:textColor="@android:color/black"
             android:text="@string/registerUser" />
 
         <Button
             android:id="@+id/OpenAccount"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:textColor="@android:color/black"
             android:text="@string/openAccount" />
 
         <Button
             android:id="@+id/Tools"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:textColor="@android:color/black"
             android:text="@string/tools" />
 
         <Button
             android:id="@+id/ContactUs"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:textColor="@android:color/black"
             android:text="@string/contactUs" />
 
         <Button
             android:id="@+id/language"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:textColor="@android:color/black"
             android:text="@string/language" />
 
         <Button
             android:id="@+id/Country"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:textColor="@android:color/black"
             android:text="@string/location" />
 
         <Button
             android:id="@+id/Products"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="67dp"
+            android:alpha="0.78"
+            android:color="#FFFFFF"
+            android:textColor="@android:color/black"
             android:text="@string/products" />
 
     </LinearLayout>

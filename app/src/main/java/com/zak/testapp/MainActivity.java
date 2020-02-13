@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Handler handler;
     //private SpeechRecognizer mSpeechRecognizer;
     //private Intent mSpeechRecognizerIntent;
-static  String language="en";
+static  String language="ar";
     @Override
     protected void onResume() {
         super.onResume();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String lang = preferences.getString("lang", "en");
+        String lang = preferences.getString("lang", "ar");
         language = lang;
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
@@ -63,6 +63,7 @@ static  String language="en";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
         activity = this;
         //enableAutoStart();
 
@@ -102,8 +103,8 @@ static  String language="en";
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+   /* @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) *//*{
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 1000:
@@ -136,22 +137,23 @@ static  String language="en";
                         //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("اللغه") || result.get(0).contains("language")) {
+                    *//*if (result.get(0).contains("اللغه") || result.get(0).contains("language")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LanguageActivity.class);
                         //EditText editText = (EditText) findViewById(R.id.editText);
                         String message = result.get(0).toLowerCase();
                         intentContactUs.putExtra("message", message);
                         if (message.contains("arabic")) {
-                           // language = "ar";
-                          //  setLocale("ar");
+                            language = "ar";
+                            setLocale("ar");
+
                         } else if (message.contains("انجليزيه")) {
-                            //language = "en";
-                          //  setLocale("en");
+                            language = "en";
+                            setLocale("en");
 
                         }
-                        //  startActivity(intentContactUs);
-                    }
+                          startActivity(intentContactUs);
+                    }*//*
                     if (result.get(0).contains("المواقع") || result.get(0).contains("location")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LocationActivity.class);
@@ -203,15 +205,15 @@ static  String language="en";
 
 
                 } else {
-                 /*   handler.postDelayed(new Runnable() {
+                 *//*   handler.postDelayed(new Runnable() {
                         public void run() {
                             speak();
                             handler.postDelayed(this, 10000);
                         }
-                    }, 10000);*/
+                    }, 10000);*//*
                 }
         }
-    }
+    }*/
 
     private void setXmlReference() {
         contactUsButton = findViewById(R.id.ContactUs);
