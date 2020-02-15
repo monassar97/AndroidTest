@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.IBinder;
@@ -41,11 +42,21 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+       // AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+
         try {
-            if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                ((AudioManager) Objects.requireNonNull(
+                        getSystemService(Context.AUDIO_SERVICE))).adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
+            } else {
                 ((AudioManager) Objects.requireNonNull(
                         getSystemService(Context.AUDIO_SERVICE))).setStreamMute(AudioManager.STREAM_SYSTEM, true);
             }
+            /*if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+                ((AudioManager) Objects.requireNonNull(
+                        getSystemService(Context.AUDIO_SERVICE))).setStreamMute(AudioManager.STREAM_SYSTEM, true);
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,6 +136,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.ContactUsActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
                 if (result.contains("الدوله") || result.toLowerCase().contains("country")) {
                     Toast.makeText(this, result, Toast.LENGTH_LONG).show();
@@ -137,6 +149,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.CountryActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
                 if (result.contains("الاسئله الشائعه") || result.toLowerCase().contains("frequently asked questions")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
@@ -149,6 +162,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.FaqActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
                 if (result.contains("اللغه") || result.contains("language")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
@@ -218,6 +232,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.LocationActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
                 if (result.contains("عروض") || result.toLowerCase().contains("offers")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
@@ -230,6 +245,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.OffersActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
                 if (result.contains("حساب جديد") || result.toLowerCase().contains("open new account")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
@@ -242,6 +258,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.OpenAccountActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
                 if (result.contains("منتجات") || result.toLowerCase().contains("products")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
@@ -254,6 +271,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.ProductsActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
                 if (result.contains("اشتراك جديد") || result.toLowerCase().contains("register new user")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
@@ -266,6 +284,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.RegisterUserActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
                 if (result.contains("ادوات") || result.toLowerCase().contains("tools")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
@@ -278,6 +297,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                     i.setClassName("com.zak.testapp", "com.zak.testapp.ToolsActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    this.onDestroy();
                 }
 
 
@@ -288,7 +308,10 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
     @Override
     public void onSpecifiedCommandPronounced(String event) {
         try {
-            if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                ((AudioManager) Objects.requireNonNull(
+                        getSystemService(Context.AUDIO_SERVICE))).adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
+            } else {
                 ((AudioManager) Objects.requireNonNull(
                         getSystemService(Context.AUDIO_SERVICE))).setStreamMute(AudioManager.STREAM_SYSTEM, true);
             }
@@ -323,12 +346,13 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
      */
     private void muteBeepSoundOfRecorder() {
         AudioManager amanager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         if (amanager != null) {
-            amanager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
-            amanager.setStreamMute(AudioManager.STREAM_ALARM, true);
-            amanager.setStreamMute(AudioManager.STREAM_MUSIC, true);
-            amanager.setStreamMute(AudioManager.STREAM_RING, true);
-            amanager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+            amanager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION,  AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_ALARM,  AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_MUSIC,  AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_RING,  AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_SYSTEM,  AudioManager.ADJUST_MUTE, 0);
         }
     }
 
