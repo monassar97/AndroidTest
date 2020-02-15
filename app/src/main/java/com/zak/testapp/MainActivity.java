@@ -12,16 +12,19 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.SyncStateContract;
-import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+
 import com.afollestad.materialdialogs.MaterialDialog.Builder;
 
 import java.util.Locale;
@@ -29,11 +32,19 @@ import java.util.Locale;
 import static com.zak.testapp.Constants.activity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button contactUsButton, countryButton, faqButton, languageButton, locationButton, offersButton, openAccountButton, productsButton, registerUserButton, toolsButton;
+    Button contactUsButton, countryButton, dialogButton, faqButton, languageButton, locationButton, offersButton, openAccountButton, voiceButton, productsButton, registerUserButton, toolsButton;
     Handler handler;
-    //private SpeechRecognizer mSpeechRecognizer;
-    //private Intent mSpeechRecognizerIntent;
-static  String language="ar";
+    private TextView returnedText;
+    private ToggleButton toggleButton;
+    private ProgressBar progressBar;
+    ImageView imageView1;
+    private SpeechRecognizer speech = null;
+    private Intent recognizerIntent;
+    private String LOG_TAG = "VoiceRecognitionActivity";
+    private SpeechRecognizer mSpeechRecognizer;
+    private Intent mSpeechRecognizerIntent;
+    static String language = "ar";
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -49,7 +60,7 @@ static  String language="ar";
         //    handler = new Handler();
         // final int delay = 10000; //milliseconds
 
-     //   speak();
+        //   speak();
        /* handler.postDelayed(new Runnable() {
             public void run() {
                 speak();
@@ -67,13 +78,21 @@ static  String language="ar";
         activity = this;
         //enableAutoStart();
 
-        if (!checkServiceRunning()) {
+        /*if (!checkServiceRunning()) {
             startService(new Intent(MainActivity.this, MyService.class));
         }else{
             setLocale(language);
-        }
+        }*/
         setXmlReference();
         setListener();
+
+
+    }
+
+    private void showTransparent() {
+        Intent intent = new Intent(this, TransparentActivity.class);
+        startActivity(intent);
+        startActivityForResult(intent, 2000);
 
 
     }
@@ -81,21 +100,21 @@ static  String language="ar";
     private void speak() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ar");
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
 
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hi Speak Something");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "كيف يمكنني مساعدتك");
 
-
-
-       /* mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        // mSpeechRecognizerIntent.putExtra(RecognizerIntent.)
+        // mSpeechRecognizerIntent.
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
                 this.getPackageName());
 
-        mSpeechRecognizer.setRecognitionListener(this);
-*/
+        // mSpeechRecognizer.setRecognitionListener(this);
         try {
             startActivityForResult(intent, 1000);
         } catch (Exception e) {
@@ -103,9 +122,13 @@ static  String language="ar";
         }
     }
 
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) *//*{
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
+        /*if (requestCode == 2000) {
+            finishActivity(2000);
+        }*/
         switch (requestCode) {
             case 1000:
                 if (resultCode == RESULT_OK && null != data) {
@@ -113,107 +136,70 @@ static  String language="ar";
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     Toast.makeText(this, "Test " + result.get(0), Toast.LENGTH_LONG).show();
                     if (result.get(0).contains("اتصل بنا") || result.get(0).contains("contact us")) {
-                        handler.removeCallbacksAndMessages(null);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ContactUsActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("الدوله") || result.get(0).contains("country")) {
+                    if (result.get(0).contains("الدوله") || result.get(0).contains("country")
+                            || result.get(0).contains("دوله")) {
                         Toast.makeText(this, result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, CountryActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("الاسئله الشائعه") || result.get(0).contains("frequently asked questions")) {
+                    if (result.get(0).contains("الاسئله الشائعه") ||
+                            result.get(0).contains("اسئله شائعه") ||
+                            result.get(0).contains("frequently asked questions")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, FaqActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    *//*if (result.get(0).contains("اللغه") || result.get(0).contains("language")) {
+                    if (result.get(0).contains("اللغه") || result.get(0).contains("language")
+                            || result.get(0).contains("لغه")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LanguageActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        String message = result.get(0).toLowerCase();
-                        intentContactUs.putExtra("message", message);
-                        if (message.contains("arabic")) {
-                            language = "ar";
-                            setLocale("ar");
-
-                        } else if (message.contains("انجليزيه")) {
-                            language = "en";
-                            setLocale("en");
-
-                        }
-                          startActivity(intentContactUs);
-                    }*//*
-                    if (result.get(0).contains("المواقع") || result.get(0).contains("location")) {
+                        startActivity(intentContactUs);
+                    }
+                    if (result.get(0).contains("المواقع") || result.get(0).contains("location")
+                            || result.get(0).contains("مواقع")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LocationActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("عروض") || result.get(0).contains("offers")) {
+                    if (result.get(0).contains("عروض") || result.get(0).contains("offers")
+                            || result.get(0).contains("عرض") || result.get(0).contains("عروض البنك") || result.get(0).contains("عروض للبنك")
+                    ) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, OffersActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("فتح حساب جديد") || result.get(0).contains("open new account")) {
+                    if (result.get(0).contains("فتح حساب جديد") || result.get(0).contains("open new account")
+                            || result.get(0).contains("حساب جديد") || result.get(0).contains("فتح حساب")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, OpenAccountActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("المنتجات") || result.get(0).contains("products")) {
+                    if (result.get(0).contains("المنتجات") || result.get(0).contains("products") || result.get(0).contains("منتج")
+                            || result.get(0).contains("انتاج") || result.get(0).contains("منتجات")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ProductsActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("اشتراك جديد") || result.get(0).contains("register new user")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, RegisterUserActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
-                    if (result.get(0).contains("ادوات") || result.get(0).contains("tools")) {
+                    if (result.get(0).contains("ادوات") || result.get(0).contains("tools")
+                            || result.get(0).contains("الادوات")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ToolsActivity.class);
-                        //EditText editText = (EditText) findViewById(R.id.editText);
-                        //String message = editText.getText().toString();
-                        //intent.putExtra("message", message);
                         startActivity(intentContactUs);
                     }
 
 
-                } else {
-                 *//*   handler.postDelayed(new Runnable() {
-                        public void run() {
-                            speak();
-                            handler.postDelayed(this, 10000);
-                        }
-                    }, 10000);*//*
                 }
         }
-    }*/
+    }
 
     private void setXmlReference() {
         contactUsButton = findViewById(R.id.ContactUs);
@@ -226,6 +212,9 @@ static  String language="ar";
         productsButton = findViewById(R.id.Products);
         registerUserButton = findViewById(R.id.RegisterUser);
         toolsButton = findViewById(R.id.Tools);
+        voiceButton = findViewById(R.id.voice);
+        dialogButton = findViewById(R.id.voice);
+
 
     }
 
@@ -240,6 +229,8 @@ static  String language="ar";
         productsButton.setOnClickListener(this);
         registerUserButton.setOnClickListener(this);
         toolsButton.setOnClickListener(this);
+        voiceButton.setOnClickListener(this);
+        dialogButton.setOnClickListener(this);
 
 
     }
@@ -248,133 +239,59 @@ static  String language="ar";
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.dialog:
+
+                Intent intentTest = new Intent(this, VoiceActivity.class);
+                startActivity(intentTest);
+                break;
+            case R.id.voice:
+                //showTransparent();
+                speak();
+                break;
             case R.id.ContactUs:
                 Intent intentContactUs = new Intent(this, ContactUsActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentContactUs);
                 break;
             case R.id.Country:
                 Intent intentCountry = new Intent(this, CountryActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentCountry);
                 break;
             case R.id.FAQ:
                 Intent intentFAQ = new Intent(this, FaqActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentFAQ);
                 break;
             case R.id.language:
                 Intent intentLanguage = new Intent(this, LanguageActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentLanguage);
                 break;
             case R.id.Location:
                 Intent intentLocation = new Intent(this, LocationActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentLocation);
                 break;
             case R.id.offers:
                 Intent intentOffers = new Intent(this, OffersActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentOffers);
                 break;
             case R.id.OpenAccount:
                 Intent intentOpenAccount = new Intent(this, OpenAccountActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentOpenAccount);
                 break;
             case R.id.Products:
                 Intent intentProducts = new Intent(this, ProductsActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentProducts);
                 break;
             case R.id.RegisterUser:
                 Intent intentRegisterUser = new Intent(this, RegisterUserActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentRegisterUser);
                 break;
             case R.id.Tools:
                 Intent intentTools = new Intent(this, ToolsActivity.class);
-                //EditText editText = (EditText) findViewById(R.id.editText);
-                //String message = editText.getText().toString();
-                //intent.putExtra("message", message);
                 startActivity(intentTools);
                 break;
             default:
                 System.out.println("Do No Thing");
         }
     }
-
-    /*@Override
-    public void onReadyForSpeech(Bundle bundle) {
-        Toast.makeText(getApplicationContext(),"1",Toast.LENGTH_LONG).show();;
-    }
-
-    @Override
-    public void onBeginningOfSpeech() {
-        Toast.makeText(getApplicationContext(),"2",Toast.LENGTH_LONG).show();;
-
-    }
-
-    @Override
-    public void onRmsChanged(float v) {
-        Toast.makeText(getApplicationContext(),"3",Toast.LENGTH_LONG).show();;
-
-    }
-
-    @Override
-    public void onBufferReceived(byte[] bytes) {
-        Toast.makeText(getApplicationContext(),"4",Toast.LENGTH_LONG).show();;
-
-    }
-
-    @Override
-    public void onEndOfSpeech() {
-        Toast.makeText(getApplicationContext(),"5",Toast.LENGTH_LONG).show();;
-
-    }
-
-    @Override
-    public void onError(int i) {
-        Toast.makeText(getApplicationContext(),"6",Toast.LENGTH_LONG).show();;
-
-    }
-
-    @Override
-    public void onResults(Bundle bundle) {
-        Toast.makeText(getApplicationContext(),"7",Toast.LENGTH_LONG).show();;
-
-    }
-
-    @Override
-    public void onPartialResults(Bundle bundle) {
-        Toast.makeText(getApplicationContext(),"8",Toast.LENGTH_LONG).show();;
-
-    }
-
-    @Override
-    public void onEvent(int i, Bundle bundle) {
-        Toast.makeText(getApplicationContext(),"9",Toast.LENGTH_LONG).show();;
-
-    }*/
 
     public void setLocale(String lang) {
         Locale myLocale = new Locale(lang);
@@ -425,4 +342,5 @@ static  String language="ar";
         }
         return false;
     }
+
 }
