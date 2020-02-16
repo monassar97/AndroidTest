@@ -41,7 +41,8 @@
         </activity>
 
 
-        <service android:name=".MyService"></service>
+        <service android:name=".MyService"  android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

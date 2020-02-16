@@ -42,11 +42,10 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-       // AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
+        // AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ((AudioManager) Objects.requireNonNull(
                         getSystemService(Context.AUDIO_SERVICE))).adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
             } else {
@@ -76,7 +75,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
             System.setProperty("rx.unsafe-disable", "True");
             RxPermissions.getInstance(this).request(permission.RECORD_AUDIO).subscribe(granted -> {
                 if (granted) { // Always true pre-M
-                    try {
+                    try {//pop up
                         Speech.getInstance().stopTextToSpeech();
                         Speech.getInstance().startListening(null, this);
                     } catch (SpeechRecognitionNotAvailable exc) {
@@ -125,26 +124,17 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 //  ArrayList<String> result = result.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 Toast.makeText(this, "Test " + result, Toast.LENGTH_LONG).show();
                 if (result.contains("اتصل بنا") || result.toLowerCase().contains("contact us")) {
-                    // handler.removeCallbacksAndMessages(null);
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, ContactUsActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.ContactUsActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
+                    stopServices();
                     this.onDestroy();
                 }
                 if (result.contains("الدوله") || result.toLowerCase().contains("country")) {
                     Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                   /* Intent intentContactUs = new Intent(this, CountryActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.CountryActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -153,11 +143,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 }
                 if (result.contains("الاسئله الشائعه") || result.toLowerCase().contains("frequently asked questions")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, FaqActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.FaqActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -166,11 +152,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 }
                 if (result.contains("اللغه") || result.contains("language")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, FaqActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.LanguageActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -214,20 +196,9 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                       startActivity(intentContactUs);
                 }*/
 
-                /*if (result.toLowerCase().contains("apple") || result.toLowerCase().contains("apple") || result.toLowerCase().contains("apple")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.MainActivity");
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getBaseContext().startActivity(i);
-                }*/
                 if (result.contains("مواقع") || result.toLowerCase().contains("location")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, LocationActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.LocationActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -236,11 +207,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 }
                 if (result.contains("عروض") || result.toLowerCase().contains("offers")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, OffersActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.OffersActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -249,11 +216,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 }
                 if (result.contains("حساب جديد") || result.toLowerCase().contains("open new account")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, OpenAccountActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.OpenAccountActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -262,11 +225,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 }
                 if (result.contains("منتجات") || result.toLowerCase().contains("products")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, ProductsActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.ProductsActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -275,11 +234,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 }
                 if (result.contains("اشتراك جديد") || result.toLowerCase().contains("register new user")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, RegisterUserActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.RegisterUserActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -288,11 +243,7 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 }
                 if (result.contains("ادوات") || result.toLowerCase().contains("tools")) {
                     Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    /*Intent intentContactUs = new Intent(this, ToolsActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    //String message = editText.getText().toString();
-                    //intent.putExtra("message", message);
-                    startActivity(intentContactUs);*/
+                    stopServices();
                     Intent i = new Intent();
                     i.setClassName("com.zak.testapp", "com.zak.testapp.ToolsActivity");
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -305,41 +256,12 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
         }
     }
 
-    @Override
-    public void onSpecifiedCommandPronounced(String event) {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                ((AudioManager) Objects.requireNonNull(
-                        getSystemService(Context.AUDIO_SERVICE))).adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
-            } else {
-                ((AudioManager) Objects.requireNonNull(
-                        getSystemService(Context.AUDIO_SERVICE))).setStreamMute(AudioManager.STREAM_SYSTEM, true);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (Speech.getInstance().isListening()) {
-            muteBeepSoundOfRecorder();
-            Speech.getInstance().stopListening();
-        } else {
-            RxPermissions.getInstance(this).request(permission.RECORD_AUDIO).subscribe(granted -> {
-                if (granted) { // Always true pre-M
-                    try {
-                        Speech.getInstance().stopTextToSpeech();
-                        Speech.getInstance().startListening(null, this);
-                    } catch (SpeechRecognitionNotAvailable exc) {
-                        //showSpeechNotSupportedDialog();
-
-                    } catch (GoogleVoiceTypingDisabledException exc) {
-                        //showEnableGoogleVoiceTyping();
-                    }
-                } else {
-                    Toast.makeText(this, "permission required", Toast.LENGTH_LONG).show();
-                }
-            });
-            muteBeepSoundOfRecorder();
-        }
+    private void stopServices() {
+        Speech.getInstance().stopTextToSpeech();
+        Speech.getInstance().stopListening();
+        Speech.getInstance().shutdown();
     }
+
 
     /**
      * Function to remove the beep sound of voice recognizer.
@@ -348,11 +270,11 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
         AudioManager amanager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         if (amanager != null) {
-            amanager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION,  AudioManager.ADJUST_MUTE, 0);
-            amanager.adjustStreamVolume(AudioManager.STREAM_ALARM,  AudioManager.ADJUST_MUTE, 0);
-            amanager.adjustStreamVolume(AudioManager.STREAM_MUSIC,  AudioManager.ADJUST_MUTE, 0);
-            amanager.adjustStreamVolume(AudioManager.STREAM_RING,  AudioManager.ADJUST_MUTE, 0);
-            amanager.adjustStreamVolume(AudioManager.STREAM_SYSTEM,  AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
+            amanager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
         }
     }
 
@@ -388,4 +310,8 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
         activity.startActivity(refresh);
     }
 
+    @Override
+    public void onSpecifiedCommandPronounced(String event) {
+
+    }
 }

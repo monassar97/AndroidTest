@@ -32,7 +32,7 @@ import java.util.Locale;
 import static com.zak.testapp.Constants.activity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button contactUsButton, countryButton, dialogButton, faqButton, languageButton, locationButton, offersButton, openAccountButton, voiceButton, productsButton, registerUserButton, toolsButton;
+    Button contactUsButton, countryButton, faqButton, languageButton, locationButton, offersButton, openAccountButton, voiceButton, productsButton, registerUserButton, toolsButton;
     Handler handler;
     private TextView returnedText;
     private ToggleButton toggleButton;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mSpeechRecognizerIntent;
     static String language = "ar";
+    Intent serviceIntent;
 
     @Override
     protected void onResume() {
@@ -51,22 +52,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String lang = preferences.getString("lang", "ar");
         language = lang;
+        serviceIntent = null;
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
-        //    handler = new Handler();
-        // final int delay = 10000; //milliseconds
-
-        //   speak();
-       /* handler.postDelayed(new Runnable() {
-            public void run() {
-                speak();
-                handler.postDelayed(this, delay);
-            }
-        }, delay);*/
 
     }
 
@@ -78,11 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         activity = this;
         //enableAutoStart();
 
-        /*if (!checkServiceRunning()) {
-            startService(new Intent(MainActivity.this, MyService.class));
-        }else{
-            setLocale(language);
-        }*/
+
         setXmlReference();
         setListener();
 
@@ -137,30 +125,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "Test " + result.get(0), Toast.LENGTH_LONG).show();
                     if (result.get(0).contains("اتصل بنا") || result.get(0).contains("contact us")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
+                        stopService(serviceIntent);
                         Intent intentContactUs = new Intent(this, ContactUsActivity.class);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("الدوله") || result.get(0).contains("country")
                             || result.get(0).contains("دوله")) {
                         Toast.makeText(this, result.get(0), Toast.LENGTH_LONG).show();
+                        stopService(serviceIntent);
                         Intent intentContactUs = new Intent(this, CountryActivity.class);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("الاسئله الشائعه") ||
                             result.get(0).contains("اسئله شائعه") ||
                             result.get(0).contains("frequently asked questions")) {
+                        stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, FaqActivity.class);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("اللغه") || result.get(0).contains("language")
                             || result.get(0).contains("لغه")) {
+                        stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LanguageActivity.class);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("المواقع") || result.get(0).contains("location")
                             || result.get(0).contains("مواقع")) {
+                        stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LocationActivity.class);
                         startActivity(intentContactUs);
@@ -168,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (result.get(0).contains("عروض") || result.get(0).contains("offers")
                             || result.get(0).contains("عرض") || result.get(0).contains("عروض البنك") || result.get(0).contains("عروض للبنك")
                     ) {
+                        stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, OffersActivity.class);
                         startActivity(intentContactUs);
@@ -175,22 +169,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (result.get(0).contains("فتح حساب جديد") || result.get(0).contains("open new account")
                             || result.get(0).contains("حساب جديد") || result.get(0).contains("فتح حساب")) {
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
+                        stopService(serviceIntent);
                         Intent intentContactUs = new Intent(this, OpenAccountActivity.class);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("المنتجات") || result.get(0).contains("products") || result.get(0).contains("منتج")
                             || result.get(0).contains("انتاج") || result.get(0).contains("منتجات")) {
+                        stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ProductsActivity.class);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("اشتراك جديد") || result.get(0).contains("register new user")) {
+                        stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, RegisterUserActivity.class);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("ادوات") || result.get(0).contains("tools")
                             || result.get(0).contains("الادوات")) {
+                        stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ToolsActivity.class);
                         startActivity(intentContactUs);
@@ -213,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         registerUserButton = findViewById(R.id.RegisterUser);
         toolsButton = findViewById(R.id.Tools);
         voiceButton = findViewById(R.id.voice);
-        dialogButton = findViewById(R.id.voice);
 
 
     }
@@ -230,7 +227,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         registerUserButton.setOnClickListener(this);
         toolsButton.setOnClickListener(this);
         voiceButton.setOnClickListener(this);
-        dialogButton.setOnClickListener(this);
 
 
     }
@@ -239,14 +235,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.dialog:
+            /*   case R.id.dialog:
 
                 Intent intentTest = new Intent(this, VoiceActivity.class);
                 startActivity(intentTest);
                 break;
+           */
             case R.id.voice:
                 //showTransparent();
-                speak();
+                // speak();
+                if (!checkServiceRunning()) {
+                    serviceIntent = new Intent(MainActivity.this, MyService.class);
+                    startService(serviceIntent);
+                } else {
+                    setLocale(language);
+                }
                 break;
             case R.id.ContactUs:
                 Intent intentContactUs = new Intent(this, ContactUsActivity.class);
