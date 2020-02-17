@@ -11,11 +11,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Build;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,23 +24,18 @@ import com.sac.speech.SpeechDelegate;
 import com.sac.speech.SpeechRecognitionNotAvailable;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
-import static com.zak.testapp.Constants.activity;
-
 public class MyService extends Service implements SpeechDelegate, Speech.stopDueToDelay {
 
     public static SpeechDelegate delegate;
-    private static String language;
+    private static String language = "ar";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ((AudioManager) Objects.requireNonNull(
@@ -52,15 +44,9 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
                 ((AudioManager) Objects.requireNonNull(
                         getSystemService(Context.AUDIO_SERVICE))).setStreamMute(AudioManager.STREAM_SYSTEM, true);
             }
-            /*if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-                ((AudioManager) Objects.requireNonNull(
-                        getSystemService(Context.AUDIO_SERVICE))).setStreamMute(AudioManager.STREAM_SYSTEM, true);
-            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        language = preferences.getString("lang", "ar");
 
         Speech.init(this);
         Locale locale = new Locale(language);
@@ -74,10 +60,11 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
         } else {
             System.setProperty("rx.unsafe-disable", "True");
             RxPermissions.getInstance(this).request(permission.RECORD_AUDIO).subscribe(granted -> {
-                if (granted) { // Always true pre-M
-                    try {//pop up
+                if (granted) {
+                    try {
                         Speech.getInstance().stopTextToSpeech();
                         Speech.getInstance().startListening(null, this);
+
                     } catch (SpeechRecognitionNotAvailable exc) {
                         //showSpeechNotSupportedDialog();
 
@@ -115,137 +102,97 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
         }
     }
 
+
     @Override
     public void onSpeechResult(String result) {
         Log.d("Result", result + "");
         if (!TextUtils.isEmpty(result)) {
             {
-
-                //  ArrayList<String> result = result.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 Toast.makeText(this, "Test " + result, Toast.LENGTH_LONG).show();
                 if (result.contains("اتصل بنا") || result.toLowerCase().contains("contact us")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.ContactUsActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.contactUsActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     stopServices();
                     this.onDestroy();
                 }
-                if (result.contains("الدوله") || result.toLowerCase().contains("country")) {
-                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                if (result.contains("الدوله") || result.contains("country")
+                        || result.contains("دوله")) {
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.CountryActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.countryActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     this.onDestroy();
                 }
-                if (result.contains("الاسئله الشائعه") || result.toLowerCase().contains("frequently asked questions")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
+                if (result.contains("الاسئله الشائعه") ||
+                        result.contains("اسئله شائعه") ||
+                        result.contains("frequently asked questions")) {
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.FaqActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.faqActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     this.onDestroy();
                 }
-                if (result.contains("اللغه") || result.contains("language")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
+                if (result.contains("اللغه") || result.contains("language") || result.contains("لغه")) {
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.LanguageActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.languageActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
-                  /*  Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, LanguageActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    String message = result.toLowerCase();
-                    intentContactUs.putExtra("message", message);*/
-          /*if (message.contains("arabic")) {
-            language = "ar";
-            setLocale("ar");
-          } else if (message.contains("انجليزيه")) {
-            language = "en";
-            setLocale("en");
 
-          }*/
-                    //startActivity(intentContactUs);
                 }
 
-               /* if (result.contains("اللغه") || result.toLowerCase().contains("language")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
-                    Intent intentContactUs = new Intent(this, LanguageActivity.class);
-                    //EditText editText = (EditText) findViewById(R.id.editText);
-                    String message = result;
-                    intentContactUs.putExtra("message", message);
-                    if (message.toLowerCase().contains("arabic")) {
-                        language = "ar";
-                        setLocale("ar");
-                        Locale locale = new Locale(language);
-                        Speech.getInstance().setLocale(locale);
-                    }
-
-                    if (message.contains("انجليزيه")) {
-                        language = "en";
-                        setLocale("en");
-                        Locale locale = new Locale(language);
-                        Speech.getInstance().setLocale(locale);
-
-                    }
-                      startActivity(intentContactUs);
-                }*/
-
-                if (result.contains("مواقع") || result.toLowerCase().contains("location")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
+                if (result.contains("مواقع") || result.toLowerCase().contains("location")
+                        || result.contains("مواقع")) {
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.LocationActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.locationActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     this.onDestroy();
                 }
-                if (result.contains("عروض") || result.toLowerCase().contains("offers")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
+                if (result.contains("عروض") || result.contains("offers")
+                        || result.contains("عرض") || result.contains("عروض البنك") || result.contains("عروض للبنك")) {
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.OffersActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.offersActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     this.onDestroy();
                 }
-                if (result.contains("حساب جديد") || result.toLowerCase().contains("open new account")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
+                if (result.contains("حساب جديد") || result.toLowerCase().contains("open new account")
+                        || result.contains("حساب جديد") || result.contains("فتح حساب") || result.contains("منتج")
+                        || result.contains("انتاج") || result.contains("منتجات")) {
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.OpenAccountActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.openAccountActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     this.onDestroy();
                 }
                 if (result.contains("منتجات") || result.toLowerCase().contains("products")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.ProductsActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.productsActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     this.onDestroy();
                 }
                 if (result.contains("اشتراك جديد") || result.toLowerCase().contains("register new user")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.RegisterUserActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.registerUserActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     this.onDestroy();
                 }
-                if (result.contains("ادوات") || result.toLowerCase().contains("tools")) {
-                    Toast.makeText(this, "" + result, Toast.LENGTH_LONG).show();
+                if (result.contains("ادوات") || result.toLowerCase().contains("tools") || result.contains("الادوات")) {
                     stopServices();
                     Intent i = new Intent();
-                    i.setClassName("com.zak.testapp", "com.zak.testapp.ToolsActivity");
+                    i.setClassName(this.getString(R.string.packageName), this.getString(R.string.toolsActivity));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getBaseContext().startActivity(i);
                     this.onDestroy();
@@ -289,25 +236,6 @@ public class MyService extends Service implements SpeechDelegate, Speech.stopDue
         assert alarmManager != null;
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, 1000, service);
         super.onTaskRemoved(rootIntent);
-    }
-
-    public void setLocale(String lang) {
-        lang = language;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("lang", lang);
-        editor.apply();
-
-        Locale myLocale = new Locale(lang);
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
-        Intent refresh = new Intent(activity, MainActivity.class);
-        refresh.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.finishAffinity();
-        activity.startActivity(refresh);
     }
 
     @Override

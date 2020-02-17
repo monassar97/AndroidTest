@@ -21,4 +21,18 @@
     <string name="allow">ALLOW</string>
     <string name="enable_autostart">Enable AutoStart</string>
     <string name="my_service_name">com.sac.speechdemo.MyService</string>
+
+    <string name="packageName">com.zak.testapp</string>
+
+    <string name="countryActivity">com.zak.testapp.CountryActivity</string>
+    <string name="offersActivity">com.zak.testapp.OffersActivity</string>
+    <string name="contactUsActivity">com.zak.testapp.ContactUsActivity</string>
+    <string name="faqActivity">com.zak.testapp.FaqActivity</string>
+    <string name="languageActivity">com.zak.testapp.LanguageActivity</string>
+    <string name="locationActivity">com.zak.testapp.LocationActivity</string>
+    <string name="openAccountActivity">com.zak.testapp.OpenAccountActivity</string>
+    <string name="productsActivity">com.zak.testapp.ProductsActivity</string>
+    <string name="registerUserActivity">com.zak.testapp.RegisterUserActivity</string>
+    <string name="toolsActivity">com.zak.testapp.ToolsActivity</string>
+
 </resources>

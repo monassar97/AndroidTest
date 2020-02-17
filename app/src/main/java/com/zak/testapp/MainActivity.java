@@ -3,7 +3,10 @@ package com.zak.testapp;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,6 +21,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +37,7 @@ import static com.zak.testapp.Constants.activity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button contactUsButton, countryButton, faqButton, languageButton, locationButton, offersButton, openAccountButton, voiceButton, productsButton, registerUserButton, toolsButton;
+    TextView textView;
     Handler handler;
     private TextView returnedText;
     private ToggleButton toggleButton;
@@ -45,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Intent mSpeechRecognizerIntent;
     static String language = "ar";
     Intent serviceIntent;
+    static Activity activity;
+    AlertDialog alertDialog;
 
     @Override
     protected void onResume() {
@@ -76,13 +83,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+/*
 
     private void showTransparent() {
         Intent intent = new Intent(this, TransparentActivity.class);
-        startActivity(intent);
-        startActivityForResult(intent, 2000);
-
-
+        //startActivity(intent);
+        startActivityForResult(intent, 100);
     }
 
     private void speak() {
@@ -109,14 +115,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+*/
 
-    @Override
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        /*if (requestCode == 2000) {
-            finishActivity(2000);
-        }*/
+
         switch (requestCode) {
             case 1000:
                 if (resultCode == RESULT_OK && null != data) {
@@ -127,13 +132,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         stopService(serviceIntent);
                         Intent intentContactUs = new Intent(this, ContactUsActivity.class);
+                        //this.finishActivity(100);
                         startActivity(intentContactUs);
+
                     }
                     if (result.get(0).contains("الدوله") || result.get(0).contains("country")
                             || result.get(0).contains("دوله")) {
                         Toast.makeText(this, result.get(0), Toast.LENGTH_LONG).show();
                         stopService(serviceIntent);
                         Intent intentContactUs = new Intent(this, CountryActivity.class);
+                        //this.finishActivity(100);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("الاسئله الشائعه") ||
@@ -142,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, FaqActivity.class);
+                        //this.finishActivity(100);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("اللغه") || result.get(0).contains("language")
@@ -149,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LanguageActivity.class);
+                        // this.finishActivity(100);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("المواقع") || result.get(0).contains("location")
@@ -156,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, LocationActivity.class);
+                        //this.finishActivity(100);
+                        // this.finish();
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("عروض") || result.get(0).contains("offers")
@@ -164,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, OffersActivity.class);
+                        // this.finishActivity(100);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("فتح حساب جديد") || result.get(0).contains("open new account")
@@ -171,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         stopService(serviceIntent);
                         Intent intentContactUs = new Intent(this, OpenAccountActivity.class);
+                        //this.finishActivity(100);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("المنتجات") || result.get(0).contains("products") || result.get(0).contains("منتج")
@@ -178,12 +192,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ProductsActivity.class);
-                        startActivity(intentContactUs);
+                        //closeDialog();
+                        //alertDialog.cancel();
+                        //alertDialog.dismiss();
+                        //closeDialog();
+                      *//*  LinearLayout layout = findViewById(R.id.dialogLayout);
+                        layout.setVisibility(View.GONE);
+                        this.finishActivity(100);
+                        startActivity(intentContactUs);*//*
+                        // this.finishActivity(100);
+                        // closeDialog();
                     }
                     if (result.get(0).contains("اشتراك جديد") || result.get(0).contains("register new user")) {
                         stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, RegisterUserActivity.class);
+                        // this.finishActivity(100);
                         startActivity(intentContactUs);
                     }
                     if (result.get(0).contains("ادوات") || result.get(0).contains("tools")
@@ -191,13 +215,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         stopService(serviceIntent);
                         Toast.makeText(this, "" + result.get(0), Toast.LENGTH_LONG).show();
                         Intent intentContactUs = new Intent(this, ToolsActivity.class);
+                        // this.finishActivity(100);
                         startActivity(intentContactUs);
                     }
 
 
                 }
         }
-    }
+    }*/
 
     private void setXmlReference() {
         contactUsButton = findViewById(R.id.ContactUs);
@@ -211,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         registerUserButton = findViewById(R.id.RegisterUser);
         toolsButton = findViewById(R.id.Tools);
         voiceButton = findViewById(R.id.voice);
+        textView = findViewById(R.id.DialogTextView);
 
 
     }
@@ -235,18 +261,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            /*   case R.id.dialog:
-
-                Intent intentTest = new Intent(this, VoiceActivity.class);
-                startActivity(intentTest);
-                break;
-           */
             case R.id.voice:
-                //showTransparent();
-                // speak();
                 if (!checkServiceRunning()) {
                     serviceIntent = new Intent(MainActivity.this, MyService.class);
                     startService(serviceIntent);
+
                 } else {
                     setLocale(language);
                 }
@@ -296,6 +315,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /* public void closeDialog() {
+         if (alertDialog != null)
+             alertDialog.dismiss();
+     }
+
+     public void showDialog() {
+         // Create the object of
+         // AlertDialog Builder class
+         AlertDialog.Builder builder
+                 = new AlertDialog
+                 .Builder(MainActivity.this);
+
+         // Set the message show for the Alert time
+         builder.setMessage("Do you want to exit ?");
+
+         // Set Alert Title
+         builder.setTitle("Alert !");
+
+         // Set Cancelable false
+         // for when the user clicks on the outside
+         // the Dialog Box then it will remain show
+         builder.setCancelable(false);
+
+         // Set the positive button with yes name
+         // OnClickListener method is use of
+         // DialogInterface interface.
+
+
+         // Set the Negative button with No name
+         // OnClickListener method is use
+         // of DialogInterface interface.
+         builder
+                 .setNegativeButton(
+                         "No",
+                         new DialogInterface
+                                 .OnClickListener() {
+
+                             @Override
+                             public void onClick(DialogInterface dialog,
+                                                 int which) {
+
+                                 // If user click no
+                                 // then dialog box is canceled.
+                                 //dialog.cancel();
+                             }
+                         });
+
+         // Create the Alert dialog
+         alertDialog = builder.create();
+         // alertDialog
+         // alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+         // Show the Alert Dialog box
+         alertDialog.show();
+     }
+ */
     public void setLocale(String lang) {
         Locale myLocale = new Locale(lang);
         Resources res = getResources();
@@ -308,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(refresh);
     }
 
-    private void enableAutoStart() {
+   /* private void enableAutoStart() {
         for (Intent intent : Constants.AUTO_START_INTENTS) {
             if (getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
                 new Builder(this).title("Enable Auto Start")
@@ -330,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
         }
-    }
+    }*/
 
 
     public boolean checkServiceRunning() {
